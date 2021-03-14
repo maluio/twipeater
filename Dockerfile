@@ -11,6 +11,8 @@ COPY requirements.txt .
 RUN cd /app \
     && pip3 install -r requirements.txt
 
+COPY . .
+
 ENV FLASK_APP=twipeater.py
 
 EXPOSE 5000

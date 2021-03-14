@@ -21,7 +21,6 @@ spec:
         imagePullPolicy: Always
         ports:
           - containerPort: 5000
-            
 ---
 apiVersion: v1
 kind: Service
@@ -33,7 +32,7 @@ spec:
   ports:
   - port: 80
     protocol: TCP
-    targetPort: 8000
+    targetPort: 5000
   selector:
     app: twipeater
   type: ClusterIP
