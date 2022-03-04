@@ -2,6 +2,8 @@ FROM python:3.9
 
 WORKDIR /app
 
+# https://github.com/twintproject/twint#march-2-2021-update
+# From the author: "Noticed a lot of people are having issues installing (including me). Please use the Dockerfile temporarily while I look into them."
 RUN cd /root && git clone --depth=1 https://github.com/twintproject/twint.git \
     && cd twint \
 	&& pip3 install . -r requirements.txt

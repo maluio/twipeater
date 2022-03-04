@@ -1,0 +1,23 @@
+# https://pypi.org/project/pip-tools/
+# $ pip-compile --generate-hashes --allow-unsafe requirements.in
+# $ pip-sync
+
+## dependency management ##
+pip-tools
+
+## flask  ##
+flask==2.0
+
+## testing ##
+pytest
+coverage
+
+## code style ##
+black
+isort
+
+## misc
+pydantic
+
+# TWINT - Twitter Intelligence Tool
+# twint
