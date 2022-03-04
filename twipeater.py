@@ -11,6 +11,14 @@ app = Flask(__name__)
 DEFAULT_SINCE_DAYS = 7
 
 
+class RemoteHostException(Exception):
+    pass
+
+
+class DeserializeException(Exception):
+    pass
+
+
 def now():
     return datetime.now()
 
@@ -44,7 +52,10 @@ def get_tweets():
 
     since_days = int(request.args.get('since-days', DEFAULT_SINCE_DAYS))
     since = now() - timedelta(days=since_days)
-    tweets = fetch_tweets(username, since)
+    try:
+        tweets = fetch_tweets(username, since)
+    except (RemoteHostException, DeserializeException):
+        return {"error": "Tweets could not be fetched for this username"}, 500
 
     data = []
     for t in tweets:
@@ -60,7 +71,7 @@ def fetch_tweets(username: str, since: datetime) -> List[Tweet]:
         raw_tweets = _fetch_raw_tweets(username, since)
     except Exception as e:
         app.logger.error(f'[tweets_fetch] Error fetching tweets for username {username} with message {str(e)}')
-        return []
+        raise RemoteHostException()
 
     for t in raw_tweets:
         try:
@@ -69,6 +80,7 @@ def fetch_tweets(username: str, since: datetime) -> List[Tweet]:
         except Exception as e:
             app.logger.error(
                 f'[tweet_deserialize] Error deserializing tweet for username {username} with message {str(e)}')
+            raise DeserializeException()
 
     return deserialized_tweets
 

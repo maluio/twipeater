@@ -1,6 +1,7 @@
 import datetime
 from unittest import mock
 
+from twipeater import RemoteHostException
 
 
 def test_404(client):
@@ -35,3 +36,13 @@ def test_get_tweets(client, make_tweet):
 
         assert r.json['tweets'][0]['id'] == 1
         assert r.json['tweets'][0]['link'] == 'https://twitter.com/12345'
+
+
+def test_get_tweets_error(client, make_tweet):
+
+    with mock.patch('twipeater.fetch_tweets') as fetch_tweets:
+        fetch_tweets.side_effect = RemoteHostException()
+
+        r = client.get('/tweets?username=foo')
+
+        assert r.json['error'] == 'Tweets could not be fetched for this username'
