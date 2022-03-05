@@ -21,3 +21,6 @@ pydantic
 
 # TWINT - Twitter Intelligence Tool
 # twint
+
+# for testing only: check if atom feed is valid
+feedparser

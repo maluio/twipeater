@@ -5,6 +5,7 @@ from dateutil.parser import parse
 from pydantic import BaseModel
 from twint import Config, run, tweet
 from flask import Flask, request
+import xml.etree.ElementTree as ET
 
 app = Flask(__name__)
 
@@ -57,6 +58,9 @@ def get_tweets():
     except (RemoteHostException, DeserializeException):
         return {"error": "Tweets could not be fetched for this username"}, 500
 
+    if request.args.get('format') and request.args.get('format') == 'atom':
+        return render_atom(tweets, username), 200, {'Content-Type': 'application/atom+xml; charset=utf-8'}
+
     data = []
     for t in tweets:
         data.append(t.dict())
@@ -96,3 +100,18 @@ def _fetch_raw_tweets(username: str, since: datetime) -> List[tweet.tweet]:
     run.Search(c)
 
     return raw_tweets
+
+
+# https://en.wikipedia.org/wiki/Atom_(Web_standard)
+def render_atom(tweets: List[Tweet], username: str) -> str:
+    root = ET.Element("feed", attrib={'xmlns': "https://www.w3.org/2005/Atom"})
+    ET.SubElement(root, "title").text = f'{username} (Twipeater)'
+    ET.SubElement(root, "id").text = f'twipeater_tweets_{username}'
+    for tw in tweets:
+        entry = ET.SubElement(root, "entry")
+        ET.SubElement(entry, "title").text = tw.tweet
+        ET.SubElement(entry, "description").text = tw.tweet
+        ET.SubElement(entry, "link").text = tw.link
+        ET.SubElement(entry, "published").text = tw.published_at.isoformat()
+
+    return ET.tostring(root, encoding='utf8', method='xml')
