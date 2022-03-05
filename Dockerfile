@@ -20,6 +20,6 @@ COPY . .
 
 ENV FLASK_APP=twipeater.py
 
-EXPOSE 5000
+EXPOSE 80
 
-CMD /usr/local/bin/flask run --host=0.0.0.0
+CMD /usr/local/bin/flask run --host=0.0.0.0 --port=80
