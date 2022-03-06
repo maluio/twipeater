@@ -40,17 +40,8 @@ class Tweet(BaseModel):
         orm_mode = True
 
 
-@app.route('/tweets/rss')
-def get_tweets_rss():
-    pass
-
-
-@app.route('/tweets')
-def get_tweets():
-    username = request.args.get('username', None)
-    if not username:
-        return {"message": "Parameter 'username' is required"}, 400
-
+@app.get('/tweets/<username>.<suffix>')
+def get_tweets(username, suffix):
     since_days = int(request.args.get('since-days', DEFAULT_SINCE_DAYS))
     since = now() - timedelta(days=since_days)
     try:
@@ -58,14 +49,17 @@ def get_tweets():
     except (RemoteHostException, DeserializeException):
         return {"error": "Tweets could not be fetched for this username"}, 500
 
-    if request.args.get('format') and request.args.get('format') == 'atom':
+    if suffix == 'atom':
         return render_atom(tweets, username), 200, {'Content-Type': 'application/atom+xml; charset=utf-8'}
 
-    data = []
-    for t in tweets:
-        data.append(t.dict())
+    if suffix == 'json':
+        data = []
+        for t in tweets:
+            data.append(t.dict())
 
-    return {'tweets': data}
+        return {'tweets': data}
+
+    return "Unsupported file type", 404
 
 
 def fetch_tweets(username: str, since: datetime) -> List[Tweet]:
