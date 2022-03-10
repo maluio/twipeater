@@ -20,7 +20,11 @@ isort
 pydantic
 
 # TWINT - Twitter Intelligence Tool
+# There is an issue with installing twint via pip, see workaround in README.md
 # twint
 
 # for testing only: check if atom feed is valid
 feedparser
+
+## documentation ##
+diagrams
