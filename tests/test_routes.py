@@ -28,7 +28,7 @@ def test_unsupported_method(client):
 def test_unsupported_suffix(client):
     r = client.get('/tweets/foo.bar')
 
-    assert r.status_code == 404
+    assert r.status_code == 400
 
 
 def test_non_existing_username(client):

@@ -59,7 +59,7 @@ def get_tweets(username, suffix):
 
         return {'tweets': data}
 
-    return "Unsupported file type", 404
+    return "Unsupported file type", 400
 
 
 def fetch_tweets(username: str, since: datetime) -> List[Tweet]:
