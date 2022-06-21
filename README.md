@@ -4,6 +4,9 @@
 
 A webservice wrapping [Twint - An advanced Twitter scraping & OSINT tool](https://github.com/twintproject/twint) with an easy-to-use API
 
+**Update** The Twint project was archived. It makes sense to archive Twipeater, too.
+
+
 ## Goals
 
     * Fetch tweets without having a Twitter API account
